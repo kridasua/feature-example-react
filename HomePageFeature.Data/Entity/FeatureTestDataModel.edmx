@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FeatureTestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Element">
+          <Key>
+            <PropertyRef Name="ElementId" />
+          </Key>
+          <Property Name="ElementId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="JSONConfiguration" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Layout">
+          <Key>
+            <PropertyRef Name="LayoutId" />
+          </Key>
+          <Property Name="LayoutId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Content" Type="nvarchar(max)" />
+          <Property Name="LayoutPreview" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Panel">
+          <Key>
+            <PropertyRef Name="PanelId" />
+          </Key>
+          <Property Name="PanelId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="LayoutId" Type="int" />
+          <Property Name="DisplayOrder" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="PanelElement">
+          <Key>
+            <PropertyRef Name="PanelElementId" />
+          </Key>
+          <Property Name="PanelElementId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ElementId" Type="int" Nullable="false" />
+          <Property Name="Content" Type="nvarchar(max)" />
+          <Property Name="PanelId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Panel_Layout">
+          <End Role="Layout" Type="Self.Layout" Multiplicity="0..1" />
+          <End Role="Panel" Type="Self.Panel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Layout">
+              <PropertyRef Name="LayoutId" />
+            </Principal>
+            <Dependent Role="Panel">
+              <PropertyRef Name="LayoutId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PanelElement_Element">
+          <End Role="Element" Type="Self.Element" Multiplicity="1" />
+          <End Role="PanelElement" Type="Self.PanelElement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Element">
+              <PropertyRef Name="ElementId" />
+            </Principal>
+            <Dependent Role="PanelElement">
+              <PropertyRef Name="ElementId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PanelElement_Panel">
+          <End Role="Panel" Type="Self.Panel" Multiplicity="1" />
+          <End Role="PanelElement" Type="Self.PanelElement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Panel">
+              <PropertyRef Name="PanelId" />
+            </Principal>
+            <Dependent Role="PanelElement">
+              <PropertyRef Name="PanelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FeatureTestModelStoreContainer">
+          <EntitySet Name="Element" EntityType="Self.Element" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Layout" EntityType="Self.Layout" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Panel" EntityType="Self.Panel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PanelElement" EntityType="Self.PanelElement" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Panel_Layout" Association="Self.FK_Panel_Layout">
+            <End Role="Layout" EntitySet="Layout" />
+            <End Role="Panel" EntitySet="Panel" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PanelElement_Element" Association="Self.FK_PanelElement_Element">
+            <End Role="Element" EntitySet="Element" />
+            <End Role="PanelElement" EntitySet="PanelElement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PanelElement_Panel" Association="Self.FK_PanelElement_Panel">
+            <End Role="Panel" EntitySet="Panel" />
+            <End Role="PanelElement" EntitySet="PanelElement" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FeatureTestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Element">
+          <Key>
+            <PropertyRef Name="ElementId" />
+          </Key>
+          <Property Name="ElementId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="JSONConfiguration" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PanelElements" Relationship="Self.FK_PanelElement_Element" FromRole="Element" ToRole="PanelElement" />
+        </EntityType>
+        <EntityType Name="Layout">
+          <Key>
+            <PropertyRef Name="LayoutId" />
+          </Key>
+          <Property Name="LayoutId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LayoutPreview" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Panels" Relationship="Self.FK_Panel_Layout" FromRole="Layout" ToRole="Panel" />
+        </EntityType>
+        <EntityType Name="Panel">
+          <Key>
+            <PropertyRef Name="PanelId" />
+          </Key>
+          <Property Name="PanelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LayoutId" Type="Int32" />
+          <Property Name="DisplayOrder" Type="Byte" />
+          <NavigationProperty Name="Layout" Relationship="Self.FK_Panel_Layout" FromRole="Panel" ToRole="Layout" />
+          <NavigationProperty Name="PanelElements" Relationship="Self.FK_PanelElement_Panel" FromRole="Panel" ToRole="PanelElement" />
+        </EntityType>
+        <EntityType Name="PanelElement">
+          <Key>
+            <PropertyRef Name="PanelElementId" />
+          </Key>
+          <Property Name="PanelElementId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ElementId" Type="Int32" Nullable="false" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PanelId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Element" Relationship="Self.FK_PanelElement_Element" FromRole="PanelElement" ToRole="Element" />
+          <NavigationProperty Name="Panel" Relationship="Self.FK_PanelElement_Panel" FromRole="PanelElement" ToRole="Panel" />
+        </EntityType>
+        <Association Name="FK_PanelElement_Element">
+          <End Role="Element" Type="Self.Element" Multiplicity="1" />
+          <End Role="PanelElement" Type="Self.PanelElement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Element">
+              <PropertyRef Name="ElementId" />
+            </Principal>
+            <Dependent Role="PanelElement">
+              <PropertyRef Name="ElementId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Panel_Layout">
+          <End Role="Layout" Type="Self.Layout" Multiplicity="0..1" />
+          <End Role="Panel" Type="Self.Panel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Layout">
+              <PropertyRef Name="LayoutId" />
+            </Principal>
+            <Dependent Role="Panel">
+              <PropertyRef Name="LayoutId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PanelElement_Panel">
+          <End Role="Panel" Type="Self.Panel" Multiplicity="1" />
+          <End Role="PanelElement" Type="Self.PanelElement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Panel">
+              <PropertyRef Name="PanelId" />
+            </Principal>
+            <Dependent Role="PanelElement">
+              <PropertyRef Name="PanelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FeatureTestEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Elements" EntityType="Self.Element" />
+          <EntitySet Name="Layouts" EntityType="Self.Layout" />
+          <EntitySet Name="Panels" EntityType="Self.Panel" />
+          <EntitySet Name="PanelElements" EntityType="Self.PanelElement" />
+          <AssociationSet Name="FK_PanelElement_Element" Association="Self.FK_PanelElement_Element">
+            <End Role="Element" EntitySet="Elements" />
+            <End Role="PanelElement" EntitySet="PanelElements" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Panel_Layout" Association="Self.FK_Panel_Layout">
+            <End Role="Layout" EntitySet="Layouts" />
+            <End Role="Panel" EntitySet="Panels" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PanelElement_Panel" Association="Self.FK_PanelElement_Panel">
+            <End Role="Panel" EntitySet="Panels" />
+            <End Role="PanelElement" EntitySet="PanelElements" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FeatureTestModelStoreContainer" CdmEntityContainer="FeatureTestEntities">
+          <EntitySetMapping Name="Elements">
+            <EntityTypeMapping TypeName="FeatureTestModel.Element">
+              <MappingFragment StoreEntitySet="Element">
+                <ScalarProperty Name="ElementId" ColumnName="ElementId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="JSONConfiguration" ColumnName="JSONConfiguration" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Layouts">
+            <EntityTypeMapping TypeName="FeatureTestModel.Layout">
+              <MappingFragment StoreEntitySet="Layout">
+                <ScalarProperty Name="LayoutId" ColumnName="LayoutId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="LayoutPreview" ColumnName="LayoutPreview" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Panels">
+            <EntityTypeMapping TypeName="FeatureTestModel.Panel">
+              <MappingFragment StoreEntitySet="Panel">
+                <ScalarProperty Name="PanelId" ColumnName="PanelId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LayoutId" ColumnName="LayoutId" />
+                <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PanelElements">
+            <EntityTypeMapping TypeName="FeatureTestModel.PanelElement">
+              <MappingFragment StoreEntitySet="PanelElement">
+                <ScalarProperty Name="PanelElementId" ColumnName="PanelElementId" />
+                <ScalarProperty Name="ElementId" ColumnName="ElementId" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="PanelId" ColumnName="PanelId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
