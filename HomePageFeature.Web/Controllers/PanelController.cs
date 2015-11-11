@@ -1,6 +1,8 @@
 ﻿using HomePageFeature.Data.Repository;
 using HomePageFeature.Web.Models;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Http;
 
 namespace HomePageFeature.Web.Controllers
@@ -12,7 +14,28 @@ namespace HomePageFeature.Web.Controllers
 
         [HttpGet]
         [Route("{Id:int}")]
-        public PanelModel GetPanel(int id)
+        public dynamic GetPanel(int id)
+        {
+            //var panel = GetFromDataBase();
+            var panel = GetFromFile();
+            return panel;
+        }
+
+        private object GetFromFile()
+        {
+            string path = Path.Combine(HttpRuntime.AppDomainAppPath, "Resources\\Panel.json");
+
+            string readContents = string.Empty;
+            using (StreamReader streamReader = new StreamReader(path))
+            {
+                readContents = streamReader.ReadToEnd();
+            }
+
+            return System.Web.Helpers.Json.Decode(readContents);
+
+        }
+
+        private object GetFromDataBase()
         {
             var paneldb = featureRepo.entities.Panels.FirstOrDefault(p => p.PanelId == 1);
 
@@ -23,20 +46,16 @@ namespace HomePageFeature.Web.Controllers
             };
 
             panel.Layout = new LayoutModel()
-                {
-                    Content = paneldb.Layout.Content,
-                    Name = paneldb.Layout.Name
-                };
+            {
+                Content = paneldb.Layout.Content,
+                Name = paneldb.Layout.Name
+            };
             panel.Elements = paneldb.PanelElements.Select(pe => new ElementModel()
             {
                 //Content = System.Web.Helpers.Json.Decode(pe.Content),
                 Content = System.Web.Helpers.Json.Decode(pe.Content),
                 Type = pe.Element.Name
             }).ToList();
-
-            
-
-
             return panel;
         }
     }
