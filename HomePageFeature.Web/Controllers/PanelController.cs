@@ -16,7 +16,7 @@ namespace HomePageFeature.Web.Controllers
         [Route("{Id:int}")]
         public dynamic GetPanel(int id)
         {
-            //var panel = GetFromDataBase();
+            //var panel = GetFromDataBase(id);
             var panel = GetFromFile();
             return panel;
         }
@@ -35,9 +35,9 @@ namespace HomePageFeature.Web.Controllers
 
         }
 
-        private object GetFromDataBase()
+        private object GetFromDataBase(int id)
         {
-            var paneldb = featureRepo.entities.Panels.FirstOrDefault(p => p.PanelId == 1);
+            var paneldb = featureRepo.entities.Panels.FirstOrDefault(p => p.PanelId == id);
 
             var panel = new PanelModel()
             {
