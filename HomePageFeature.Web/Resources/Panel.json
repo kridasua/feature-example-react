@@ -3,15 +3,9 @@
     "DisplayOrder": 1,
     "Layout": {
         "Name": "two columns three boxes",
-        "Content": "<div>\r\n\t<div class=\"content1\" ></div>\r\n\t<div class=\"content2\" ></div>\r\n\t<div class=\"content3\" ></div>\r\n</div>"
+        "Content": "<div>\r\n\t<div data-feature-name=\"content-1\" ></div>\r\n\t<div data-feature-name=\"content-2\" ></div>\r\n\t<div data-feature-name=\"content-3\" ></div>\r\n</div>"
     },
     "Elements": [
-        {
-            "Type": "Text",
-            "Content": {
-                "Html": "<p>a new paragraph</p>"
-            }
-        },
         {
             "Type": "Button",
             "Content": {
@@ -22,9 +16,15 @@
         {
             "Type": "Image",
             "Content": {
-                "Source": "\\CmsContent\\folder\\image1",
+                "Source": "http://www.avivadirectory.com/photoshop/images/text_effect_01.jpg",
                 "Alt": "cool alt text",
                 "Caption": "caption image"
+            }
+        },
+        {
+            "Type": "Text",
+            "Content": {
+                "Html": "<p>a new paragraph</p>"
             }
         }
     ]

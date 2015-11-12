@@ -13,6 +13,12 @@ namespace HomePageFeature.Web
                 "~/Scripts/Panel.jsx",
                 "~/Scripts/Comment.jsx"                
             ));
+
+            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
+                 "~/Scripts/jquery-{version}.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/ckeditor").Include(
+                 "~/Scripts/ckeditor/ckeditor.js"));
         }
     }
 }
